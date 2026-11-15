@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuéntame de tu página</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: asistente por pasos a la izquierda, vista previa del sitio en vivo a la derecha (arriba en celular) */
+:root{
+  --bg:#eef1f5; --surface:#ffffff; --fg:#0e141b; --muted:#5a6876; --line:#d5dde5;
+  --accent:#1f5eff; --accent-ink:#ffffff; --accent-soft:#e3ebff; --mint:#19b394; --err:#c4271d;
+  --pv-bg:#f8fafc; --pv-block:#e6ebf1; --pv-strong:#c9d3de;
+  --display:"Sora",system-ui,sans-serif; --body:Inter,system-ui,-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1016; --surface:#131b24; --fg:#e8eef4; --muted:#8fa0b0; --line:#243241;
+  --accent:#6f95ff; --accent-ink:#0b1016; --accent-soft:#18264a; --mint:#3fd3b1; --err:#ff8a80;
+  --pv-bg:#0f161e; --pv-block:#1c2733; --pv-strong:#2b3a4a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1016; --surface:#131b24; --fg:#e8eef4; --muted:#8fa0b0; --line:#243241;
+  --accent:#6f95ff; --accent-ink:#0b1016; --accent-soft:#18264a; --mint:#3fd3b1; --err:#ff8a80;
+  --pv-bg:#0f161e; --pv-block:#1c2733; --pv-strong:#2b3a4a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.page{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px;display:grid;gap:24px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--mono);font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.brand i{width:8px;height:8px;border-radius:50%;background:var(--mint);display:inline-block}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:28px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}.preview-col{order:-1}}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,42px);line-height:1.08;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{color:var(--muted);margin:10px 0 0;max-width:52ch}
+/* progreso */
+.steps{display:flex;gap:6px;margin-top:22px}
+.steps span{flex:1;height:5px;border-radius:3px;background:var(--line);transition:background .3s}
+.steps span.on{background:var(--accent)}
+.stepinfo{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:8px}
+/* tarjeta del paso */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:18px;display:grid;gap:18px}
+.card h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0;letter-spacing:-.01em}
+.card .sub{color:var(--muted);margin:-10px 0 0;font-size:14px}
+.f{display:grid;gap:7px}
+.f>label,.f>.q{font-weight:600;font-size:14px}
+.hint{color:var(--muted);font-weight:400}
+input[type=text],input[type=tel],select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:12px;padding:12px 14px;font:15px var(--body);transition:border-color .2s}
+input:hover,select:hover,textarea:hover{border-color:var(--muted)}
+textarea{min-height:76px;resize:vertical}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.opt{position:relative;display:grid;gap:4px;border:1.5px solid var(--line);border-radius:14px;padding:12px 12px 12px 40px;cursor:pointer;background:var(--bg);transition:border-color .2s,background .2s}
+.opt input{position:absolute;left:12px;top:14px;width:18px;height:18px;margin:0;accent-color:var(--accent)}
+.opt b{font-weight:600;font-size:14px}
+.opt small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.opt:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:520px){.row2{grid-template-columns:1fr}}
+.nav{display:flex;gap:10px;justify-content:space-between;margin-top:4px}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);font:600 15px var(--body);padding:13px 20px;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn.wa{background:var(--mint);color:#06231c}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.err{color:var(--err);font-size:14px;margin:0}
+.review{display:grid;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.review div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:10px 14px;border-top:1px solid var(--line);font-size:14px}
+.review div:first-child{border-top:0}
+.review dt{color:var(--muted);margin:0}.review dd{margin:0;overflow-wrap:anywhere}
+@media (max-width:520px){.review div{grid-template-columns:1fr;gap:2px}}
+.done{display:grid;gap:12px;text-align:left}
+.done h2 + p{margin:0;color:var(--muted)}
+pre{white-space:pre-wrap;font:13px/1.5 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;margin:0;max-height:220px;overflow:auto}
+.trust{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:16px}
+.trust span{display:flex;align-items:center;gap:6px}
+.trust svg{width:16px;height:16px;stroke:var(--mint);fill:none;stroke-width:2.2}
+/* vista previa */
+.preview-col{position:sticky;top:calc(16px + env(safe-area-inset-top,0px))}
+@media (max-width:900px){.preview-col{position:static}}
+.pv-label{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+.browser{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 18px 50px -24px rgba(14,20,27,.35)}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.dots{display:flex;gap:5px}.dots i{width:10px;height:10px;border-radius:50%;background:var(--pv-strong);display:block}
+.url{flex:1;min-width:0;background:var(--bg);border-radius:8px;padding:5px 10px;font:500 12px var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.url b{color:var(--fg);font-weight:500}
+.site{background:var(--pv-bg);padding:14px;display:grid;gap:10px;min-height:340px;position:relative}
+@media (max-width:900px){.site{min-height:0;max-height:300px;overflow:hidden}}
+.s-nav{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.s-logo{font-family:var(--display);font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;min-width:0}
+.s-logo span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-logo i{width:18px;height:18px;border-radius:6px;background:var(--accent);flex:none;display:block}
+.s-links{display:flex;gap:6px}.s-links i{width:26px;height:6px;border-radius:3px;background:var(--pv-strong);display:block}
+.s-hero{border-radius:12px;padding:18px 14px;background:linear-gradient(135deg,var(--accent-soft),var(--pv-block));display:grid;gap:6px}
+.s-hero h3{font-family:var(--display);font-size:19px;line-height:1.15;margin:0;text-wrap:balance;overflow-wrap:anywhere}
+.s-hero p{margin:0;font-size:12px;color:var(--muted)}
+.s-hero .cta{justify-self:start;font-size:11px;font-weight:600;background:var(--accent);color:var(--accent-ink);padding:5px 10px;border-radius:7px;margin-top:4px}
+.s-blocks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.blk{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px;display:grid;gap:6px;animation:pop .35s ease both}
+.blk.wide{grid-column:1/-1}
+.blk b{font-size:11px;font-weight:600}
+.blk .ln{height:5px;border-radius:3px;background:var(--pv-block)}
+.blk .ln.s{width:60%}
+.blk .ph{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.blk .ph i{aspect-ratio:1;border-radius:5px;background:var(--pv-strong);display:block}
+.wa-float{position:absolute;right:12px;bottom:12px;width:34px;height:34px;border-radius:50%;background:var(--mint);display:grid;place-items:center;animation:pop .35s ease both}
+.wa-float svg{width:18px;height:18px;fill:#06231c}
+.empty{font-size:12px;color:var(--muted);text-align:center;padding:16px;border:1.5px dashed var(--line);border-radius:10px}
+@keyframes pop{from{opacity:.0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.blk,.wa-float{animation:none}.steps span{transition:none}}
+.foot{color:var(--muted);font-size:12.5px;text-align:center}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top">
+    <div class="brand"><i></i>Diseño web para negocios</div>
+  </div>
+
+  <div class="grid">
+    <form id="form" novalidate>
+      <h1>Cuéntame de tu negocio y te diseño <em>la página ideal</em></h1>
+      <p class="lead">Son 5 pasos cortos. A la derecha ves cómo se va armando tu página mientras contestas. Al final me mandas todo por WhatsApp y te respondo con tu cotización.</p>
+
+      <div class="steps" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="stepinfo"><span id="stepNum">Paso 1 de 5</span><span id="stepName">Tu negocio</span></div>
+
+      <!-- 1 -->
+      <section class="card" data-step="1" data-name="Tu negocio">
+        <h2>Tu negocio</h2>
+        <p class="sub">Lo básico para conocerte.</p>
+        <div class="row2">
+          <div class="f"><label for="nombre">Tu nombre *</label><input type="text" id="nombre" autocomplete="name" placeholder="Ej. Laura Martínez"></div>
+          <div class="f"><label for="tel">Tu WhatsApp</label><input type="tel" id="tel" autocomplete="tel" placeholder="10 dígitos"></div>
+        </div>
+        <div class="f"><label for="negocio">Nombre del negocio *</label><input type="text" id="negocio" placeholder="Ej. Estética Lumière"></div>
+        <div class="f"><label for="giro">¿A qué se dedica?</label><input type="text" id="giro" placeholder="Ej. cortes, uñas y tratamientos capilares"></div>
+      </section>
+
+      <!-- 2 -->
+      <section class="card" data-step="2" data-name="Objetivo" hidden>
+        <h2>¿Qué quieres lograr con tu página?</h2>
+        <p class="sub">Elige todas las que apliquen. Esto define cómo se diseña.</p>
+        <div class="opts" data-name="objetivo">
+          <label class="opt"><input type="checkbox" value="Que me contacten por WhatsApp" data-k="wa"><b>Más clientes por WhatsApp</b><small>Botón para escribirte desde cualquier parte</small></label>
+          <label class="opt"><input type="checkbox" value="Mostrar productos o menú" data-k="cat"><b>Mostrar productos</b><small>Catálogo o menú con fotos y precios</small></label>
+          <label class="opt"><input type="checkbox" value="Vender en línea" data-k="shop"><b>Vender en línea</b><small>Pedidos o carrito de compra</small></label>
+          <label class="opt"><input type="checkbox" value="Agendar citas" data-k="cita"><b>Agendar citas</b><small>Que elijan día y hora</small></label>
+          <label class="opt"><input type="checkbox" value="Verme profesional"><b>Verme profesional</b><small>Dar confianza a nuevos clientes</small></label>
+          <label class="opt"><input type="checkbox" value="Aparecer en Google" data-k="seo"><b>Aparecer en Google</b><small>Que te encuentren al buscar</small></label>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="card" data-step="3" data-name="Secciones" hidden>
+        <h2>¿Qué secciones te gustaría?</h2>
+        <p class="sub">Míralas aparecer en la vista previa. Si no sabes, te recomiendo las que ya están marcadas.</p>
+        <div class="opts" data-name="secciones">
+          <label class="opt"><input type="checkbox" value="Servicios" data-s="Servicios" checked><b>Servicios</b><small>Lo que ofreces</small></label>
+          <label class="opt"><input type="checkbox" value="Productos / menú" data-s="Productos" data-ph><b>Productos o menú</b><small>Con foto y precio</small></label>
+          <label class="opt"><input type="checkbox" value="Quiénes somos" data-s="Quiénes somos"><b>Quiénes somos</b><small>Tu historia</small></label>
+          <label class="opt"><input type="checkbox" value="Galería de fotos" data-s="Galería" data-ph><b>Galería</b><small>Tus trabajos o local</small></label>
+          <label class="opt"><input type="checkbox" value="Precios" data-s="Precios"><b>Precios</b><small>Paquetes o tarifas</small></label>
+          <label class="opt"><input type="checkbox" value="Opiniones de clientes" data-s="Opiniones"><b>Opiniones</b><small>Reseñas que dan confianza</small></label>
+          <label class="opt"><input type="checkbox" value="Ubicación y horario" data-s="Ubicación y horario" data-wide checked><b>Ubicación y horario</b><small>Mapa y horas</small></label>
+          <label class="opt"><input type="checkbox" value="Preguntas frecuentes" data-s="Preguntas frecuentes"><b>Preguntas frecuentes</b><small>Ahorra mensajes</small></label>
+        </div>
+        <div class="f"><label for="productos">¿Cuántos productos o servicios quieres mostrar?</label>
+          <select id="productos"><option value="">Elige una opción</option><option>Menos de 10</option><option>De 10 a 30</option><option>Más de 30</option><option>No aplica</option></select></div>
+        <div class="f"><label for="ejemplos">¿Alguna página que te guste como ejemplo? <span class="hint">(opcional)</span></label><textarea id="ejemplos" placeholder="Pega el link o dime de qué negocio es"></textarea></div>
+      </section>
+
+      <!-- 4 -->
+      <section class="card" data-step="4" data-name="Material y dominio" hidden>
+        <h2>Lo que ya tienes</h2>
+        <p class="sub">Si no tienes algo, no pasa nada: te ayudo a conseguirlo.</p>
+        <div class="opts" data-name="tiene">
+          <label class="opt"><input type="checkbox" value="Logo" data-k="logo"><b>Logo</b><small>En imagen o archivo</small></label>
+          <label class="opt"><input type="checkbox" value="Fotos"><b>Fotos</b><small>De productos o del local</small></label>
+          <label class="opt"><input type="checkbox" value="Textos"><b>Textos</b><small>Descripción del negocio</small></label>
+          <label class="opt"><input type="checkbox" value="Redes sociales"><b>Redes sociales</b><small>Facebook, Instagram, TikTok</small></label>
+        </div>
+        <div class="f"><label for="dominio">¿Cómo te gustaría tu dirección web?</label><input type="text" id="dominio" placeholder="Ej. esteticalumiere.com" autocapitalize="off" spellcheck="false"></div>
+        <div class="f"><span class="q">Terminación del dominio</span>
+          <div class="opts" data-name="dominios">
+            <label class="opt"><input type="checkbox" value=".com" data-d=".com"><b>.com</b><small>La más conocida</small></label>
+            <label class="opt"><input type="checkbox" value=".com.mx" data-d=".com.mx"><b>.com.mx</b><small>Negocio en México</small></label>
+            <label class="opt"><input type="checkbox" value="Ya tengo dominio"><b>Ya tengo uno</b><small>Lo conectamos</small></label>
+            <label class="opt"><input type="checkbox" value="No sé"><b>No sé</b><small>Te recomiendo</small></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="card" data-step="5" data-name="Tiempo y presupuesto" hidden>
+        <h2>Tiempo y presupuesto</h2>
+        <p class="sub">Con esto te propongo la opción que mejor te queda.</p>
+        <div class="row2">
+          <div class="f"><label for="cuando">¿Para cuándo la necesitas?</label>
+            <select id="cuando"><option value="">Elige una opción</option><option>Lo antes posible (menos de una semana)</option><option>En 2 a 3 semanas</option><option>En un mes o más</option><option>No tengo prisa</option></select></div>
+          <div class="f"><label for="presupuesto">¿Cuánto piensas invertir?</label>
+            <select id="presupuesto"><option value="">Elige una opción</option><option>Menos de $3,000</option><option>$3,000 a $6,000</option><option>$6,000 a $10,000</option><option>Más de $10,000</option><option>No sé todavía</option></select></div>
+        </div>
+        <div class="f"><span class="q">¿Te ayudo con cambios cada mes?</span>
+          <div class="opts" data-name="mantenimiento">
+            <label class="opt"><input type="radio" name="mant" value="Sí"><b>Sí</b><small>Yo actualizo fotos y precios</small></label>
+            <label class="opt"><input type="radio" name="mant" value="No, yo la manejo"><b>No</b><small>La manejo yo</small></label>
+            <label class="opt"><input type="radio" name="mant" value="Tal vez"><b>Tal vez</b><small>Lo platicamos</small></label>
+          </div>
+        </div>
+        <div class="f"><label for="comentarios">¿Algo más que deba saber? <span class="hint">(opcional)</span></label><textarea id="comentarios"></textarea></div>
+      </section>
+
+      <!-- revisar / listo -->
+      <section class="card" data-step="6" data-name="Revisar" hidden>
+        <div class="done" id="review">
+          <h2>Revisa y envía</h2>
+          <p>Así me llegan tus respuestas. Si algo no está bien, regresa y cámbialo.</p>
+          <dl class="review" id="reviewList"></dl>
+          <a class="btn wa" id="wa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg>Enviar por WhatsApp</a>
+          <button class="btn ghost" type="button" id="copiar">Copiar respuestas</button>
+          <p class="hint" id="waNote" style="margin:0;font-size:13px"></p>
+          <pre id="resumen" hidden></pre>
+        </div>
+      </section>
+
+      <p class="err" id="err" hidden></p>
+      <div class="nav">
+        <button class="btn ghost" type="button" id="atras" hidden>Atrás</button>
+        <span></span>
+        <button class="btn" type="submit" id="sig">Siguiente</button>
+      </div>
+
+      <div class="trust">
+        <span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Diseño para celular y computadora</span>
+        <span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Te muestro un avance antes de terminar</span>
+        <span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Cotización sin compromiso</span>
+      </div>
+    </form>
+
+    <aside class="preview-col" aria-label="Vista previa de tu página">
+      <div class="pv-label"><span>Vista previa de tu página</span><span id="pvCount"></span></div>
+      <div class="browser">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="url" id="url">https://<b>tunegocio</b>.com</div></div>
+        <div class="site" id="site">
+          <div class="s-nav"><div class="s-logo"><i id="pvLogo"></i><span id="pvName">Tu negocio</span></div><div class="s-links"><i></i><i></i><i></i></div></div>
+          <div class="s-hero"><h3 id="pvTitle">Tu negocio</h3><p id="pvGiro">Aquí va lo que haces y por qué elegirte.</p><span class="cta" id="pvCta">Contáctanos</span></div>
+          <div class="s-blocks" id="pvBlocks"></div>
+          <div class="wa-float" id="pvWa" hidden><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg></div>
+        </div>
+      </div>
+      <p class="foot" style="margin-top:10px">Es una idea de cómo podría verse. El diseño final se hace a tu medida.</p>
+    </aside>
+  </div>
+</div>
+
+<script>
+// Número de WhatsApp que recibe las respuestas (52 + 10 dígitos). Vacío = solo copiar.
+const WHATSAPP="";
+const $=id=>document.getElementById(id);
+const cards=[...document.querySelectorAll(".card")];
+const TOTAL=5;let paso=1;
+const val=id=>$(id).value.trim();
+const chips=n=>[...document.querySelectorAll(`[data-name="${n}"] input:checked`)].map(i=>i.value);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const slug=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"").slice(0,28);
+
+function preview(){
+  const neg=val("negocio")||"Tu negocio";
+  $("pvName").textContent=neg;$("pvTitle").textContent=neg;
+  $("pvGiro").textContent=val("giro")||"Aquí va lo que haces y por qué elegirte.";
+  const obj=[...document.querySelectorAll('[data-name="objetivo"] input:checked')].map(i=>i.dataset.k);
+  $("pvCta").textContent=obj.includes("shop")?"Comprar ahora":obj.includes("cita")?"Agendar cita":obj.includes("cat")?"Ver productos":"Contáctanos";
+  $("pvWa").hidden=!obj.includes("wa");
+  // dominio
+  let d=val("dominio").replace(/^https?:\/\//,"").replace(/\/.*$/,"");
+  const ext=[...document.querySelectorAll('[data-name="dominios"] input:checked')].map(i=>i.dataset.d).filter(Boolean)[0];
+  if(!d)d=(slug(val("negocio"))||"tunegocio")+(ext||".com");
+  else if(!d.includes("."))d+=ext||".com";
+  const dot=d.indexOf(".");$("url").innerHTML="https://<b>"+esc(d.slice(0,dot))+"</b>"+esc(d.slice(dot));
+  // bloques
+  const secs=[...document.querySelectorAll('[data-name="secciones"] input:checked')];
+  const extra=[];if(obj.includes("cita")&&!secs.some(s=>s.dataset.s==="Citas"))extra.push({s:"Agenda tu cita",wide:true});
+  const all=secs.map(i=>({s:i.dataset.s,ph:"ph" in i.dataset,wide:"wide" in i.dataset})).concat(extra);
+  const box=$("pvBlocks"),prev=new Set([...box.children].map(c=>c.dataset.s));
+  box.innerHTML=all.length?all.map(b=>`<div class="blk${b.wide?" wide":""}" data-s="${esc(b.s)}" style="${prev.has(b.s)?"animation:none":""}"><b>${esc(b.s)}</b>${b.ph?'<div class="ph"><i></i><i></i><i></i></div>':'<div class="ln"></div><div class="ln s"></div>'}</div>`).join(""):'<div class="empty" style="grid-column:1/-1">Elige secciones y aparecen aquí</div>';
+  $("pvCount").textContent=all.length?`${all.length+1} secciones`:"";
+}
+
+function ir(n){
+  paso=n;
+  cards.forEach(c=>c.hidden=+c.dataset.step!==n);
+  document.querySelectorAll(".steps span").forEach((s,i)=>s.classList.toggle("on",i<Math.min(n,TOTAL)));
+  $("stepNum").textContent=n>TOTAL?"Listo":`Paso ${n} de ${TOTAL}`;
+  $("stepName").textContent=cards[n-1].dataset.name;
+  $("atras").hidden=n===1;
+  $("sig").hidden=n>TOTAL;
+  $("sig").textContent=n===TOTAL?"Revisar respuestas":"Siguiente";
+  $("err").hidden=true;
+  if(n>TOTAL)armar();
+  const top=document.querySelector(".steps").getBoundingClientRect().top+scrollY-24;
+  if(scrollY>top)scrollTo({top,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+}
+
+function datos(){
+  return [["Nombre",val("nombre")],["Negocio",val("negocio")],["Giro",val("giro")],["WhatsApp",val("tel")],
+   ["Objetivo",chips("objetivo").join(", ")],["Secciones",chips("secciones").join(", ")],["Productos o servicios",$("productos").value],
+   ["Ejemplos",val("ejemplos")],["Ya tiene",chips("tiene").join(", ")],["Dominio deseado",val("dominio")],["Terminación",chips("dominios").join(", ")],
+   ["Para cuándo",$("cuando").value],["Presupuesto",$("presupuesto").value],["Mantenimiento",chips("mantenimiento").join(", ")],["Comentarios",val("comentarios")]].filter(r=>r[1]);
+}
+function armar(){
+  const D=datos();
+  $("reviewList").innerHTML=D.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join("");
+  const t="Hola, quiero cotizar una página web. Estas son mis respuestas:\n\n"+D.map(r=>`*${r[0]}:* ${r[1]}`).join("\n");
+  $("resumen").textContent=t;
+  if(WHATSAPP){$("wa").hidden=false;$("wa").href=`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(t)}`;$("waNote").textContent="Se abre WhatsApp con tu mensaje escrito. Solo dale enviar."}
+  else{$("wa").hidden=true;$("waNote").textContent="Copia tus respuestas y mándalas por WhatsApp a quien te compartió este formulario."}
+}
+
+$("form").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(paso===1&&(!val("nombre")||!val("negocio"))){
+    $("err").textContent="Escribe tu nombre y el nombre de tu negocio para continuar.";$("err").hidden=false;
+    (val("nombre")?$("negocio"):$("nombre")).focus();return;
+  }
+  if(paso<=TOTAL)ir(paso+1);
+});
+$("atras").onclick=()=>ir(paso-1);
+$("copiar").onclick=()=>{
+  const t=$("resumen").textContent,b=$("copiar"),ok=()=>{b.textContent="Copiado ✓"};
+  const sel=()=>{$("resumen").hidden=false;const r=document.createRange();r.selectNodeContents($("resumen"));const s=getSelection();s.removeAllRanges();s.addRange(r)};
+  try{navigator.clipboard.writeText(t).then(ok,()=>{sel();ok()})}catch(e){sel();ok()}
+};
+document.addEventListener("input",preview);document.addEventListener("change",preview);
+preview();ir(1);
+</script>
+</body>
+</html>

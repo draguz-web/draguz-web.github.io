@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Draguz Web</title>
+<meta name="description" content="Páginas web para negocios: se ven bien en el celular, aparecen en Google y te mandan los clientes directo a tu WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: portada con ventanas de navegador abiertas en abanico (trabajos reales), luego trabajos, paquetes, proceso, preguntas y cierre */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --fg:#101318; --muted:#5d6672; --line:#dde1e7;
+  --accent:#e1262f; --accent-ink:#ffffff; --accent-soft:#fde8e9; --ink:#101318; --ink-fg:#f5f6f8; --wa:#1fa855;
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --body:Inter,system-ui,-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c0e12; --surface:#151920; --fg:#eef1f5; --muted:#98a2b0; --line:#262c36;
+  --accent:#ff4a52; --accent-ink:#ffffff; --accent-soft:#3a1517; --ink:#1b2029; --ink-fg:#eef1f5; --wa:#2fc169; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c0e12; --surface:#151920; --fg:#eef1f5; --muted:#98a2b0; --line:#262c36;
+  --accent:#ff4a52; --accent-ink:#ffffff; --accent-soft:#3a1517; --ink:#1b2029; --ink-fg:#eef1f5; --wa:#2fc169; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+img{max-width:100%;display:block}
+a{color:inherit}
+.in{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.02em}
+h2{font-size:clamp(28px,4.4vw,44px);font-weight:800;line-height:1.05}
+.eyebrow{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--accent)}
+.lead{color:var(--muted);font-size:17px;max-width:58ch;margin:12px 0 0}
+section{padding-block:72px}
+.head{display:grid;gap:8px;margin-bottom:36px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:14px 20px;font:700 15px var(--body);text-decoration:none;cursor:pointer;background:var(--accent);color:var(--accent-ink);transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--fg);border:1.5px solid var(--line)}
+.btn.wa{background:var(--wa);color:#fff}
+.btn svg{width:18px;height:18px;flex:none}
+a:focus-visible,.btn:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+
+/* encabezado */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo .mk{width:32px;height:32px;border-radius:9px;background:var(--fg);color:var(--bg);display:grid;place-items:center;font:500 13px var(--mono)}
+.logo b{color:var(--accent);font-weight:800}
+nav{display:flex;align-items:center;gap:26px;font-weight:600;font-size:14.5px}
+nav a{text-decoration:none;color:var(--muted)}nav a:hover{color:var(--fg)}
+@media (max-width:820px){nav .l{display:none}}
+nav .btn{padding:10px 14px;font-size:14px}
+
+/* portada */
+.hero{padding-block:56px 40px;overflow:hidden}
+.hero .in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:40px;align-items:center}
+@media (max-width:900px){.hero .in{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(38px,6.4vw,72px);font-weight:800;line-height:.98;letter-spacing:-.035em}
+.hero h1 .u{background:linear-gradient(transparent 62%,var(--accent-soft) 62%);padding:0 .06em}
+.hero .lead{font-size:18px}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.checks{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:var(--muted);font-size:14px}
+.checks span{display:flex;gap:6px;align-items:center}
+.checks svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:2.6}
+.stack{position:relative;aspect-ratio:1.18;max-width:100%}
+.win{position:absolute;width:74%;border-radius:12px;overflow:hidden;background:var(--surface);border:1px solid var(--line);box-shadow:0 30px 60px -30px rgba(16,19,24,.45);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.win .bar{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--surface)}
+.win .bar i{width:8px;height:8px;border-radius:50%;background:var(--line);display:block}
+.win .bar span{margin-left:8px;font:500 10.5px var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.win img{aspect-ratio:960/555;object-fit:cover;width:100%}
+.w1{left:0;top:4%;transform:rotate(-5deg);z-index:1}
+.w2{right:0;top:0;transform:rotate(4deg);z-index:2}
+.w3{left:13%;bottom:0;transform:rotate(-1deg);z-index:3}
+.stack:hover .w1{transform:rotate(-7deg) translate(-10px,-6px)}
+.stack:hover .w2{transform:rotate(6deg) translate(10px,-8px)}
+@media (prefers-reduced-motion:reduce){.win,.btn{transition:none}}
+
+/* franja */
+.strip{border-block:1px solid var(--line);background:var(--surface)}
+.strip .in{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding-block:22px}
+@media (max-width:760px){.strip .in{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.strip div{display:grid;gap:2px}
+.strip b{font-family:var(--display);font-size:18px}
+.strip span{color:var(--muted);font-size:13.5px}
+
+/* trabajos */
+.works{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+@media (max-width:760px){.works{grid-template-columns:1fr}}
+.work{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;transition:border-color .2s}
+.work:hover{border-color:var(--fg)}
+.work .shot{background:var(--bg);padding:14px 14px 0}
+.work .shot img{border-radius:10px 10px 0 0;border:1px solid var(--line);border-bottom:0;aspect-ratio:960/555;object-fit:cover;width:100%}
+.work .txt{padding:18px 20px 20px;display:grid;gap:8px;border-top:1px solid var(--line)}
+.work .tp{font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.work h3{font-size:22px}
+.work p{margin:0;color:var(--muted);font-size:15px}
+.work .go{font-weight:700;font-size:14px;color:var(--accent);display:flex;gap:6px;align-items:center;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:12.5px;font-weight:600;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+
+/* paquetes */
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+@media (max-width:900px){.plans{grid-template-columns:1fr}}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:14px}
+.plan.pop{border:2px solid var(--fg);position:relative}
+.plan.pop::before{content:"El más pedido";position:absolute;top:-12px;left:22px;background:var(--fg);color:var(--bg);font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;border-radius:6px}
+.plan h3{font-size:22px}
+.plan .for{color:var(--muted);font-size:14.5px;margin:0}
+.price{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+.price small{font:500 13px var(--body);color:var(--muted);letter-spacing:0;display:block;margin-bottom:6px}
+.plan ul{list-style:none;padding:0;margin:0;display:grid;gap:9px;font-size:14.5px;flex:1}
+.plan li{display:flex;gap:9px}
+.plan li svg{width:17px;height:17px;flex:none;margin-top:3px;stroke:var(--accent);fill:none;stroke-width:2.6}
+.plan .btn{width:100%}
+.fine{color:var(--muted);font-size:13.5px;margin:18px 0 0;max-width:80ch}
+
+/* proceso */
+.ink{background:var(--ink);color:var(--ink-fg)}
+.ink .lead{color:color-mix(in srgb,var(--ink-fg) 70%,transparent)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:s}
+@media (max-width:860px){.steps{grid-template-columns:1fr 1fr;row-gap:28px}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+.step{padding-right:22px;display:grid;gap:8px;align-content:start}
+.step .n{font:500 13px var(--mono);color:var(--accent);display:flex;align-items:center;gap:10px}
+.step .n::after{content:"";flex:1;height:1px;background:color-mix(in srgb,var(--ink-fg) 25%,transparent)}
+.step h3{font-size:20px}
+.step p{margin:0;font-size:14.5px;color:color-mix(in srgb,var(--ink-fg) 72%,transparent)}
+
+/* extras */
+.extras{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+@media (max-width:860px){.extras{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.extras{grid-template-columns:1fr}}
+.extras div{background:var(--surface);padding:22px;display:grid;gap:6px;align-content:start}
+.extras svg{width:26px;height:26px;stroke:var(--fg);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.extras b{font-family:var(--display);font-size:18px}
+.extras span{color:var(--muted);font-size:14.5px}
+
+/* preguntas */
+.faq{display:grid;gap:10px;max-width:820px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0 20px}
+summary{cursor:pointer;list-style:none;font-weight:700;padding:18px 0;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:500 20px var(--mono);color:var(--accent);line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin:0 0 18px;color:var(--muted)}
+
+/* cierre */
+.final{padding-block:24px 80px}
+.final .box{background:var(--accent);color:var(--accent-ink);border-radius:24px;padding:clamp(28px,5vw,56px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:center}
+@media (max-width:760px){.final .box{grid-template-columns:1fr}}
+.final h2{color:inherit}
+.final p{margin:10px 0 0;opacity:.9;max-width:52ch}
+.final .btn{background:var(--accent-ink);color:#101318}
+.final .btn.wa{background:#101318;color:#fff}
+.final .ctas{margin-top:0;flex-direction:column}
+footer{border-top:1px solid var(--line)}
+footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:26px;color:var(--muted);font-size:14px}
+.float{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 10px 30px -10px rgba(0,0,0,.4);z-index:8}
+.float svg{width:28px;height:28px;fill:#fff}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ok" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></symbol>
+  <symbol id="arr" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header><div class="in">
+  <a class="logo" href="#inicio" aria-label="Draguz Web, inicio"><span class="mk">&lt;/&gt;</span><span>Draguz<b>Web</b></span></a>
+  <nav><a class="l" href="#trabajos">Trabajos</a><a class="l" href="#paquetes">Paquetes</a><a class="l" href="#proceso">Cómo trabajo</a><a class="l" href="#preguntas">Preguntas</a><a class="btn" href="cotiza/">Cotiza tu página</a></nav>
+</div></header>
+
+<section class="hero" id="inicio"><div class="in">
+  <div>
+    <span class="eyebrow">Páginas web para negocios</span>
+    <h1 style="margin-top:14px">Tu negocio, <span class="u">abierto las 24 horas</span> en internet.</h1>
+    <p class="lead">Hago páginas que se ven bien en el celular, aparecen en Google y te mandan los clientes directo a tu WhatsApp. Te muestro avances desde el primer día y tú decides cada detalle.</p>
+    <div class="ctas">
+      <a class="btn" href="cotiza/">Cotiza tu página <svg aria-hidden="true"><use href="#arr"/></svg></a>
+      <a class="btn ghost" href="#trabajos">Ver trabajos</a>
+    </div>
+    <div class="checks">
+      <span><svg aria-hidden="true"><use href="#ok"/></svg>Cotización sin compromiso</span>
+      <span><svg aria-hidden="true"><use href="#ok"/></svg>Página sencilla en 3 a 5 días</span>
+      <span><svg aria-hidden="true"><use href="#ok"/></svg>50% al empezar, 50% al entregar</span>
+    </div>
+  </div>
+  <div class="stack" aria-hidden="true">
+    <div class="win w1"><div class="bar"><i></i><i></i><i></i><span>draguzshop.com</span></div><img src="img/draguz.jpg" alt=""></div>
+    <div class="win w2"><div class="bar"><i></i><i></i><i></i><span>bienes-raices / catálogo</span></div><img src="img/casas.jpg" alt=""></div>
+    <div class="win w3"><div class="bar"><i></i><i></i><i></i><span>cfaip-web</span></div><img src="img/cfaip.jpg" alt=""></div>
+  </div>
+</div></section>
+
+<div class="strip"><div class="in">
+  <div><b>Hecha para celular</b><span>Donde te buscan tus clientes</span></div>
+  <div><b>Botón de WhatsApp</b><span>Te escriben en un toque</span></div>
+  <div><b>Aparece en Google</b><span>Que te encuentren al buscar</span></div>
+  <div><b>Tu propio dominio</b><span>tunegocio.com o .com.mx</span></div>
+</div></div>
+
+<section id="trabajos"><div class="in">
+  <div class="head"><span class="eyebrow">Trabajos</span><h2>Páginas que ya están trabajando</h2><p class="lead">Ábrelas desde tu celular. Cada una está hecha a la medida del negocio, no con una plantilla de las que se ven en todos lados.</p></div>
+  <div class="works">
+    <a class="work" href="https://draguz-web.github.io/cfaip-web/" target="_blank" rel="noopener">
+      <div class="shot"><img src="img/cfaip.jpg" alt="Página de CFAIP Consultores y Servicios" loading="lazy"></div>
+      <div class="txt"><span class="tp">Despacho de servicios · Monterrey</span><h3>CFAIP Consultores</h3><p>Créditos, bienes raíces y trámites. El cliente llena una solicitud y le llega lista por WhatsApp.</p><div class="chips"><span>Solicitud a WhatsApp</span><span>Servicios por categoría</span><span>Aviso de privacidad</span></div><span class="go">Ver página <svg width="16" height="16" aria-hidden="true"><use href="#arr"/></svg></span></div>
+    </a>
+    <a class="work" href="https://draguz-web.github.io/bienes-raices/catalogo.html" target="_blank" rel="noopener">
+      <div class="shot"><img src="img/casas.jpg" alt="Catálogo de casas en venta" loading="lazy"></div>
+      <div class="txt"><span class="tp">Inmobiliaria · Monterrey</span><h3>Catálogo de casas en venta</h3><p>Casas con filtros, mapa con precios y ficha de cada propiedad. El dueño sube sus casas desde su propio panel.</p><div class="chips"><span>Mapa</span><span>Filtros</span><span>Panel de administración</span></div><span class="go">Ver página <svg width="16" height="16" aria-hidden="true"><use href="#arr"/></svg></span></div>
+    </a>
+    <a class="work" href="https://draguzshop.com" target="_blank" rel="noopener">
+      <div class="shot"><img src="img/draguz.jpg" alt="Tienda en línea Draguz Shop" loading="lazy"></div>
+      <div class="txt"><span class="tp">Tienda de ropa personalizada</span><h3>Draguz Shop</h3><p>Catálogo de más de 70 diseños, cotizador de mayoreo, pedidos por WhatsApp y seguimiento de cada pedido.</p><div class="chips"><span>Catálogo</span><span>Cotizador</span><span>Cuentas de clientes</span></div><span class="go">Ver página <svg width="16" height="16" aria-hidden="true"><use href="#arr"/></svg></span></div>
+    </a>
+    <a class="work" href="https://paucoxd.github.io/invitaciones/" target="_blank" rel="noopener">
+      <div class="shot"><img src="img/tufecha.jpg" alt="Invitaciones digitales Tu Fecha" loading="lazy"></div>
+      <div class="txt"><span class="tp">Invitaciones digitales</span><h3>Tu Fecha</h3><p>Invitaciones para bodas y XV años que se abren como un sobre, con nombre de cada familia y confirmaciones automáticas.</p><div class="chips"><span>14 diseños</span><span>Confirmaciones</span><span>Código QR</span></div><span class="go">Ver página <svg width="16" height="16" aria-hidden="true"><use href="#arr"/></svg></span></div>
+    </a>
+  </div>
+</div></section>
+
+<section id="paquetes" style="padding-top:24px"><div class="in">
+  <div class="head"><span class="eyebrow">Paquetes</span><h2>Elige por dónde empezar</h2><p class="lead">Todos incluyen diseño para celular y computadora, botón de WhatsApp y publicación. El precio final depende de lo que necesites; te lo confirmo antes de empezar.</p></div>
+  <div class="plans">
+    <div class="plan">
+      <h3>Página sencilla</h3><p class="for">Para que tu negocio exista en internet y te escriban.</p>
+      <div class="price"><small>Desde</small>$3,000</div>
+      <ul><li><svg aria-hidden="true"><use href="#ok"/></svg>Una página con toda tu información</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Servicios, ubicación y horario</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Botón de WhatsApp y mapa</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Lista en 3 a 5 días</li></ul>
+      <a class="btn ghost" href="cotiza/">Cotizar</a>
+    </div>
+    <div class="plan pop">
+      <h3>Página completa</h3><p class="for">Para verte profesional y convencer a clientes nuevos.</p>
+      <div class="price"><small>Desde</small>$6,000</div>
+      <ul><li><svg aria-hidden="true"><use href="#ok"/></svg>Hasta 5 secciones</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Galería de fotos y opiniones</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Formulario que llega a tu WhatsApp</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Alta en Google</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Lista en 1 a 2 semanas</li></ul>
+      <a class="btn" href="cotiza/">Cotizar</a>
+    </div>
+    <div class="plan">
+      <h3>Catálogo o tienda</h3><p class="for">Para mostrar muchos productos o propiedades y recibir pedidos.</p>
+      <div class="price"><small>Desde</small>$10,000</div>
+      <ul><li><svg aria-hidden="true"><use href="#ok"/></svg>Catálogo con filtros y fichas</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Pedidos o citas por WhatsApp</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Panel para subir tus productos tú mismo (opcional)</li><li><svg aria-hidden="true"><use href="#ok"/></svg>Lista en 2 a 3 semanas</li></ul>
+      <a class="btn ghost" href="cotiza/">Cotizar</a>
+    </div>
+  </div>
+  <p class="fine">Precios en pesos mexicanos. El dominio (tunegocio.com) se paga aparte cada año; su precio depende del proveedor. Mantenimiento mensual opcional para cambios de fotos, textos y precios.</p>
+</div></section>
+
+<section class="ink" id="proceso"><div class="in">
+  <div class="head"><span class="eyebrow">Cómo trabajo</span><h2 style="color:inherit">De la plática a tu página publicada</h2><p class="lead">Sin sorpresas: sabes qué sigue en cada paso y ves tu página antes de pagar el resto.</p></div>
+  <div class="steps">
+    <div class="step"><span class="n">01</span><h3>Me cuentas tu negocio</h3><p>Llenas el formulario o platicamos. Te mando una cotización clara ese mismo día.</p></div>
+    <div class="step"><span class="n">02</span><h3>Anticipo y diseño</h3><p>Con el 50% arranco. Te mando avances para que veas cómo va quedando.</p></div>
+    <div class="step"><span class="n">03</span><h3>Ajustes</h3><p>Cambiamos lo que quieras: colores, textos, fotos, orden de las secciones.</p></div>
+    <div class="step"><span class="n">04</span><h3>Publicamos</h3><p>Pagas el resto, conectamos tu dominio y tu página queda en línea.</p></div>
+  </div>
+</div></section>
+
+<section><div class="in">
+  <div class="head"><span class="eyebrow">También hago</span><h2>Extras para tu negocio</h2></div>
+  <div class="extras">
+    <div><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><b>Citas en línea</b><span>Tus clientes eligen día y hora, y te llega por WhatsApp.</span></div>
+    <div><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h16v12H4zM8 20h8M12 16v4"/></svg><b>Panel de administración</b><span>Sube y cambia tus productos sin depender de nadie.</span></div>
+    <div><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><b>Alta en Google</b><span>Ficha en Google Maps y que tu página aparezca al buscarte.</span></div>
+    <div><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16v13H4zM4 7l8 6 8-6"/></svg><b>Invitaciones digitales</b><span>Para bodas, XV años y eventos, con confirmaciones.</span></div>
+    <div><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="12" rx="2"/><path d="M7 21h10M9 15l-1 6M15 15l1 6"/></svg><b>Punto de venta</b><span>Sistema para cobrar, llevar inventario y hacer corte de caja.</span></div>
+    <div><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><b>Logo y textos</b><span>Si no tienes logo o no sabes qué escribir, te ayudo.</span></div>
+  </div>
+</div></section>
+
+<section id="preguntas" style="padding-top:0"><div class="in">
+  <div class="head"><span class="eyebrow">Preguntas</span><h2>Lo que más me preguntan</h2></div>
+  <div class="faq">
+    <details><summary>¿Cuánto tarda en estar lista?</summary><p>Una página sencilla, de 3 a 5 días. Una completa, de 1 a 2 semanas. Un catálogo o tienda, de 2 a 3 semanas. Depende también de qué tan rápido me pases tus fotos y textos.</p></details>
+    <details><summary>¿Qué necesito para empezar?</summary><p>Tu logo si tienes, fotos de tu negocio o productos y la información que quieras mostrar. Si te falta algo, te ayudo a conseguirlo.</p></details>
+    <details><summary>¿Qué es el dominio y cuánto cuesta?</summary><p>Es la dirección de tu página, como tunegocio.com. Se paga cada año al proveedor y el precio cambia según la terminación (.com, .com.mx). Te digo el precio real antes de comprarlo y queda a tu nombre.</p></details>
+    <details><summary>¿Cómo se paga?</summary><p>50% de anticipo para empezar y 50% cuando la página está lista y te gustó. Puede ser por transferencia o en efectivo.</p></details>
+    <details><summary>¿Y si después quiero cambiar algo?</summary><p>Puedes contratar mantenimiento mensual y yo hago los cambios, o pedirme cambios sueltos cuando los necesites. Si tu página tiene panel, los cambias tú mismo.</p></details>
+  </div>
+</div></section>
+
+<section class="final"><div class="in"><div class="box">
+  <div><h2>¿Platicamos de tu página?</h2><p>Contesta unas preguntas rápidas sobre tu negocio y te mando tu cotización por WhatsApp. Sin compromiso.</p></div>
+  <div class="ctas"><a class="btn" href="cotiza/">Cotiza tu página <svg aria-hidden="true"><use href="#arr"/></svg></a><a class="btn wa js-wa" href="#" target="_blank" rel="noopener" hidden><svg aria-hidden="true"><use href="#wa"/></svg>Escríbeme por WhatsApp</a></div>
+</div></div></section>
+
+<footer><div class="in"><span>© 2026 Draguz Web · Páginas web para negocios</span><span class="js-tel" hidden></span></div></footer>
+<a class="float js-wa" href="#" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp" hidden><svg aria-hidden="true"><use href="#wa"/></svg></a>
+
+<script>
+// Tu WhatsApp: 52 + 10 dígitos, sin espacios. Mientras esté vacío, los botones de WhatsApp no se muestran.
+const WHATSAPP="";
+if(WHATSAPP){
+  const url="https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent("Hola, vi tu página y quiero cotizar una página web para mi negocio.");
+  document.querySelectorAll(".js-wa").forEach(a=>{a.href=url;a.hidden=false});
+  const t=document.querySelector(".js-tel"),n=WHATSAPP.slice(-10);t.textContent="WhatsApp "+n.slice(0,2)+" "+n.slice(2,6)+" "+n.slice(6);t.hidden=false;
+}
+</script>
+</body>
+</html>
